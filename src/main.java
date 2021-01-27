@@ -104,11 +104,47 @@ class Main {
     }
 
     public static void askQuestion(BufferedWriter buffer, StringBuilder scr) throws IOException {
-        wordDraw("Whatever Question you want?", screen, 1, HEIGHT-2);
+        wordDraw("Do you engage in combat? Y/N: ", screen, 1, HEIGHT-2);
         buffer.write(scr.toString());
         buffer.flush();
         Scanner input = new Scanner(System.in);
         String answer = input.nextLine();
+        if(answer.toLowerCase().equals("n")){
+            wordDraw("It attacks you in the back, you're dead", screen, 1, HEIGHT-2);
+            //gameover
+        }else if(answer.toLowerCase().equals("y")){
+            wordDraw("What would you like to do? Attack : Magic: Item : Flee", screen, 1, HEIGHT-2);
+            answer = input.nextLine();
+            if(answer.toLowerCase().equals("attack")){
+                wordDraw("You attacked the monster for 6 points of damage", screen, 1, HEIGHT-2);
+                //combat hit point stuff
+            }else if(answer.toLowerCase().equals("magic")){
+                wordDraw("What would you like to cast? Fireball : Sleep", screen, 1, HEIGHT-2);
+                //energy be quite limited
+                answer = input.nextLine();
+                if(answer.toLowerCase().equals("fireball")){
+                    //uses the most energy to cast
+                    //if enough energy cast, if not tell not enough energy return to menu
+                    wordDraw("You cast fireball, you do 10 damage", screen, 1, HEIGHT-2);
+                    //deduct energy
+                }else if(answer.toLowerCase().equals("sleep")){
+                    //cost middle amount
+                    wordDraw("You cast Sleep, the monster fell asleep!", screen, 1, HEIGHT-2);
+                    //attacker skips 2 turns
+                }
+
+            } else if(answer.toLowerCase().equals("item")){
+                wordDraw("What would you like to consume? Potion : Ether", screen, 1, HEIGHT-2);
+                answer = input.nextLine();
+                if(answer.toLowerCase().equals("potion")){
+                    wordDraw("You healed 10 points of health", screen, 1, HEIGHT-2);
+                }else if(answer.toLowerCase().equals("ether")){
+                    wordDraw("You recovered 10 points of energy", screen, 1, HEIGHT-2);
+                }
+            }else if(answer.toLowerCase().equals("flee")){
+                //roll to see if can flee, if not get whacked
+            }
+        }
         //logic here
     }
     
