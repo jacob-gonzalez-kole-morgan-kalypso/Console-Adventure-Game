@@ -5,23 +5,28 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Scanner;
+import pkg.*;
 
 class Main {
 
     private static int WIDTH = 80;
     private static int HEIGHT = 20;
     private static StringBuilder screen;
+    private static Player player;
 
     public static void main(String[] args) throws IOException {
         
         char wall = '#';
         char empty = ' ';
 
+        player = new Player(); 
+
         //prepares our fake screenbuffer
         screen = new StringBuilder();
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(java.io.FileDescriptor.out), "ASCII"), 512);
-        boolean running = true;
+        boolean running = startQuestion();
 
+        askName();
         //gameloop
         while(running){
 
@@ -33,35 +38,78 @@ class Main {
             //draw screen
             for(byte i = 0;i <= HEIGHT; i++){ 
                 for(byte o = 0;o <= WIDTH; o++){
-                    if(o == 0 || o == WIDTH || i == 0 || i == HEIGHT){
-                        screen.append(wall);
-                    }else{
-                        screen.append(empty);
-                    }
-                    
+                    screen.append(empty); 
                 }
-                screen.append("\n");
+                screen.append("\n");//creates next line
             }
 
+            //Player Hud
+            drawPlayerHud();
 
-             //write to screen
-             out.write(screen.toString());
-             out.flush();
+            //write to screen
+            out.write(screen.toString());
+            out.flush();
 
-             //stops and waits for interaction
-             askQuestion();
+            //stops and waits for interaction
+            askQuestion(out, screen);
+
+            //checks for death
+            player.checkStats();
         }
-    }
-
-    public static void askQuestion(){
-        Scanner input = new Scanner(System.in);
-        input.next();
-    }
-
-    public static void drawBox(int length, int height, int x, int y, String text){
-        int middle = height/2;
-        StringBuilder output;
         
+        clearConsole();    
+        System.out.println("Thank you for playing");
+    }
+
+    public static boolean startQuestion(){
+        System.out.println("Are you ready to begin (Y/N)?: ");
+        Scanner input = new Scanner(System.in);
+        String answer = input.nextLine();
+        if(answer.length() == 0) return true; //catches null input
+        if(answer.toLowerCase().charAt(0) == 'n'){
+            return false; //if user says no
+        }
+        return true;
+    }
+
+    public static void drawPlayerHud(){
+        wordDraw("Health: " + player.getHealth(), screen, 1,0);
+        wordDraw("Energy: " + player.getEnergy(), screen, 1,1);
+        wordDraw(player.getName(), screen, WIDTH-(player.getName().length()), 0 );
+    }
+
+    public static void askName(){
+        System.out.println("What is your name?: ");
+        Scanner input = new Scanner(System.in);
+        String answer = input.nextLine();
+        String name;
+        if(answer.length() == 0){  //catches null input
+            System.out.println("I asked for your name please");
+            askName();
+        }else{
+            name = answer;
+            System.out.println("Your name is " + answer + " , Correct (Y/N)? : ");
+            answer = input.nextLine();
+            if(answer.toLowerCase().charAt(0) == 'n'){  //if user says no
+                System.out.println("Okay then what is it?");
+                askName();
+            }else{
+                System.out.println("Welcome to ________ , " + name);
+                player.setName(name);
+            }
+        }
+        
+        
+       
+    }
+
+    public static void askQuestion(BufferedWriter buffer, StringBuilder scr) throws IOException {
+        wordDraw("Whatever Question you want?", screen, 1, HEIGHT-2);
+        buffer.write(scr.toString());
+        buffer.flush();
+        Scanner input = new Scanner(System.in);
+        String answer = input.nextLine();
+        //logic here
     }
     
     public static void plot(char input, StringBuilder scr, int x, int y){ 
