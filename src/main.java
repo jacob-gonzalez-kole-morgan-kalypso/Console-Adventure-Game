@@ -109,7 +109,7 @@ class Main{
 
             case 'r': //run
                     pHealth += 5; //do damage
-                    return; //respawns new monster
+                    spawnMonster((int) Math.floor(Math.random() * 20)+10);
 
             default: //invalid input
                 playerTurn(); //recursion 
@@ -124,8 +124,8 @@ class Main{
         if(mHealth <= 0){
             
             System.err.println("The monster has been defeated!");
-//            moneyRewards();
-            return; //goes back to the loop
+            spawnMonster((int) Math.floor(Math.random() * 20)+10);
+            
         }
 
         int dmg = (int) Math.floor(Math.random() * 3)+3;
