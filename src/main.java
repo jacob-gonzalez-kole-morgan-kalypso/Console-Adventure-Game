@@ -1,4 +1,5 @@
-import java.util.Scanner; 
+import java.sql.SQLOutput;
+import java.util.Scanner;
 
 class Main{
 
@@ -6,7 +7,9 @@ class Main{
     private static String pName;
     private static int pHealth;
     private static int mHealth;
+//    private static int money;
     private static Scanner input;
+    private static String answer;
 
 
     public static void main(String[] args) {
@@ -19,6 +22,15 @@ class Main{
 
         while(running){
             spawnMonster((int) Math.floor(Math.random() * 20)+10); //cast health to a random number 10-30
+//            if(!running){
+//                System.out.print("You have died, would you like to play again? Y/N: ");
+//                String newgame = input.nextLine();
+//                if(newgame.toLowerCase().equals("y")){
+//                    running = true;
+//                }else{
+//                    System.out.print("Ok, then good bye!");
+//                }
+//            }
         }
         input.close();
 
@@ -41,6 +53,10 @@ class Main{
         }
         return false;
     }
+
+//    public static void openWorld(){
+//        //system asks to move, player moves , move monster spawn into here and set a random variable to monster spawning
+//    }
 
     public static void askNameQuestion(){
 
@@ -71,21 +87,21 @@ class Main{
 
    
         System.out.println("Attack : Heal : Run");
-        String answer = input.nextLine();
-        if(answer.length() <= 0) { //check for empty string or it will crash
+        answer = input.nextLine();
+        if(answer.isEmpty()) { //check for empty string or it will crash
             playerTurn(); //recursion 
         }
 
         switch(answer.toLowerCase().charAt(0)){
             case 'a': //attack
-                    int dmg = (int) Math.floor(Math.random() * 3);
+                    int dmg = (int) Math.floor(Math.random() * 3)+3;
                     mHealth -= dmg; //do damage
                     
                     System.out.println("You did " + dmg + " damage to the monster!");
                 break;
 
             case 'h': //heal
-                    int heal = (int) Math.floor(Math.random() * 3);
+                    int heal = (int) Math.floor(Math.random() * 3)+5;
                     pHealth += heal; //heal
                     
                     System.out.println("You healed yourself for " + heal + " points!");
@@ -108,10 +124,11 @@ class Main{
         if(mHealth <= 0){
             
             System.err.println("The monster has been defeated!");
+//            moneyRewards();
             return; //goes back to the loop
         }
 
-        int dmg = (int) Math.floor(Math.random() * 3);
+        int dmg = (int) Math.floor(Math.random() * 3)+3;
         pHealth -= dmg;
 
 
@@ -120,6 +137,13 @@ class Main{
         playerTurn();
 
     }
+
+//    public static void moneyRewards(){
+//        int gains = (int) Math.floor(Math.random()*3)+5;
+//        System.out.println("You collected "+gains+" gold!");
+//        money += gains;
+//
+//    }
 
     public static void displayStats(){
 
